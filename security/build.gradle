@@ -1,0 +1,77 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace 'com.lhl.security'
+    compileSdk 32
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 32
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}
+apply plugin: 'maven-publish'  // gradle 7 以后使用
+
+boolean hasWeb = false
+
+var PUB_GROUP_ID = "com.lhl.security"
+var PUB_ARTIFACT_ID = "security"
+var PUB_CORE_VERSION = "1.0.0"
+var PUBLISH_URL = "/Users/liuhuiliang/work/gitMaven"
+var PUBLISH_USERNAME = "deployment"
+var PUBLISH_PASSWORD = "000000"
+
+afterEvaluate {
+    publishing {
+        publications {
+            plugin(MavenPublication) {
+//                from components.release
+                artifact "build\\outputs\\aar\\security-debug.aar"
+
+//                from components.java
+                groupId = PUB_GROUP_ID
+                artifactId = PUB_ARTIFACT_ID
+                version = PUB_CORE_VERSION
+            }
+
+        }
+
+        repositories {
+            maven {
+                allowInsecureProtocol true  // 如果PUBLISH_URL是http，此处必须为true，如果是https，则可以删除此项
+                name = "nexus"  // 配置后在Gradle > Tasks > publishing 下会显示对应的名称，容易区分
+                url = uri(PUBLISH_URL)
+                if (!hasWeb)
+                    return
+                credentials {
+                    username = PUBLISH_USERNAME
+                    password = PUBLISH_PASSWORD
+                }
+            }
+        }
+    }
+}
