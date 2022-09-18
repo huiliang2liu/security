@@ -17,7 +17,7 @@ maven { url = uri("https://gitee.com/liu-huiliang/jarlibs/raw/master") }
 implementation 'com.lhl.security:security:1.0.0'
 ```
 
-##### 在application中爱动
+##### 在application中调用
 ```
 new Security.Builder(this).setCheckAdb(true)
                 .setCheckSp(true).setCheckManifest(true)
