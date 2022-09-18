@@ -4,7 +4,7 @@
         检测项目是否打开了数据备份，activity是否对外开放，存储数据是否用了SharedPreferences，并且在
     应用退到后台打印SharedPreferences中数据，并提醒私密数据加密处理,检测EditTextView中的数据是否清空
 ##### 在任何情况下
-        检测设备是否打开了ADB调试，检测设备是否root，检测设备是否设置了网络代理
+        检测设备是否打开了ADB调试，检测设备是否root，检测设备是否设置了网络代理,检测设备网络变化
 ##### 查看提醒日志
         用Security过滤error日志
 #### 使用 
