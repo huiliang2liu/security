@@ -184,6 +184,8 @@ public class SecurityActivityLifecycleCallback implements Application.ActivityLi
 
 
     private void checkEditText(Activity activity){
+        if(!Util.isDebug(activity))
+            return;
         if(!builder.checkEditTextEmpty)
             return;
         new Thread(){
