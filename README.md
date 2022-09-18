@@ -50,12 +50,12 @@ new Security.Builder(this).setCheckAdb(true)
 
 #### api说明
 ##### SecurityListener
-| 方法名 | 方法说明                        | 参数 |
-| --- |-----------------------------| ---  |
-| onRoot | 当前设备被rootle，每个activity可见时回调 | activity当前可见的activity |
+| 方法名 | 方法说明                         | 参数 |
+| --- |------------------------------| ---  |
+| onRoot | 当前设备被root了，每个activity可见时回调   | activity当前可见的activity |
 | onAdb | 当前设备打开了adb调试，每个activity可见时回调 | activity当前可见的activity |
-| onProxy | 当前设备网络存在代理回调，app启动回调一次      |  |
-| onNetworkChange | 当前设备网络发生变化回调                |  |
+| onProxy | 当前设备网络存在代理回调，app启动回调一次       |  |
+| onNetworkChange | 当前设备网络发生变化回调                 |  |
 
 ##### Security.Builder
 | 方法名 | 方法说明                                       | 参数           |
