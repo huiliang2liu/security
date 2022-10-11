@@ -183,13 +183,14 @@ public class SecurityActivityLifecycleCallback implements Application.ActivityLi
     }
 
 
-    private void checkEditText(Activity activity){
-        if(!Util.isDebug(activity))
+    private void checkEditText(Activity activity) {
+        if (!Util.isDebug(activity))
             return;
-        if(!builder.checkEditTextEmpty)
+        if (!builder.checkEditTextEmpty)
             return;
-        new Thread(){
+        new Thread() {
             WeakReference<Activity> reference = new WeakReference<>(activity);
+
             @Override
             public void run() {
                 super.run();
@@ -199,34 +200,34 @@ public class SecurityActivityLifecycleCallback implements Application.ActivityLi
                     e.printStackTrace();
                 }
                 Activity a = reference.get();
-                if(a==null)
+                if (a == null)
                     return;
-                Window  window = a.getWindow();
-                if(window==null)
+                Window window = a.getWindow();
+                if (window == null)
                     return;
-                if(checkEditText((ViewGroup) window.getDecorView()))
-                    Log.e("Security",a.getClass().getName()+"中请确保私密数据是否清空");
+                if (checkEditText((ViewGroup) window.getDecorView()))
+                    Log.e("Security", a.getClass().getName() + "中请确保私密数据是否清空");
             }
         }.start();
     }
 
-    private boolean  checkEditText(ViewGroup group){
-        if(group==null)
+    private boolean checkEditText(ViewGroup group) {
+        if (group == null)
             return false;
         int count = group.getChildCount();
-        if(count<=0)
+        if (count <= 0)
             return false;
         View view;
-        for (int i =0;i<count;i++){
+        for (int i = 0; i < count; i++) {
             view = group.getChildAt(i);
-            if(view instanceof ViewGroup){
-                if(checkEditText((ViewGroup) view))
+            if (view instanceof ViewGroup) {
+                if (checkEditText((ViewGroup) view))
                     return true;
                 continue;
             }
-            if(!(view instanceof EditText))
+            if (!(view instanceof EditText))
                 continue;
-            if(!TextUtils.isEmpty(((EditText) view).getText().toString()))
+            if (!TextUtils.isEmpty(((EditText) view).getText().toString()))
                 return true;
         }
         return false;
@@ -245,9 +246,13 @@ public class SecurityActivityLifecycleCallback implements Application.ActivityLi
         if (!file.exists() || file.isFile())
             return;
         File[] files = file.listFiles();
+        if (files.length <= 0)
+            return;
+        Log.e("Security", "项目中使用了SharedPreferences，请确保私密数据加密了");
         for (File f : files) {
             if (!f.exists())
                 continue;
+            Log.e("Security", f.getAbsolutePath());
             BufferedReader reader = null;
             try {
                 reader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
@@ -266,6 +271,5 @@ public class SecurityActivityLifecycleCallback implements Application.ActivityLi
                     }
             }
         }
-        Log.e("Security", "项目中使用了SharedPreferences，请确保私密数据加密了");
     }
 }

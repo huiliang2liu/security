@@ -9,6 +9,8 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
@@ -73,24 +75,105 @@ public class Security {
         if (!builder.checkManifest)
             return;
         try {
-            PackageInfo applicationInfo = builder.context.getPackageManager().getPackageInfo(builder.context.getPackageName(), PackageManager.GET_ACTIVITIES);
+            PackageInfo applicationInfo = builder.context.getPackageManager().getPackageInfo(builder.context.getPackageName(), 0);
             boolean allowBackup = (applicationInfo.applicationInfo.flags & ApplicationInfo.FLAG_ALLOW_BACKUP) == ApplicationInfo.FLAG_ALLOW_BACKUP;
             if (allowBackup)
                 Log.e(TAG, "allowBackup不要设置成true，数据会有被复制的危险，请确认是否需要备份数据，如果不需要请设置成false");
-            ActivityInfo[] activityInfos = applicationInfo.activities;
-            if (activityInfos != null && activityInfos.length > 0) {
-                StringBuilder stringBuilder = new StringBuilder();
-                for (ActivityInfo activityInfo : activityInfos) {
-                    if (!activityInfo.exported)
-                        continue;
-                    stringBuilder.setLength(0);
-                    stringBuilder.append(activityInfo.name).append("的exported是true,请确认是否要对外开发，不需要的话请设置成false，需要的则确认做了数据校验");
-                    Log.e(TAG, stringBuilder.toString());
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        checkActivity(builder.context);
+        checkService(builder.context);
+        checkReceiver(builder.context);
+        checkProvider(builder.context);
+    }
+
+    private void checkActivity(Context context) {
+        Log.e(TAG, "开始检测activity");
+        Log.e(TAG, "=============================================");
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+            ActivityInfo[] infos = packageInfo.activities;
+            if (infos == null || infos.length <= 0)
+                return;
+            StringBuilder stringBuilder = new StringBuilder();
+            for (ActivityInfo activityInfo : infos) {
+                if (!activityInfo.exported)
+                    continue;
+                stringBuilder.setLength(0);
+                stringBuilder.append(activityInfo.name).append("的exported是true,请确认是否要对外开发，不需要的话请设置成false，需要的则确认做了数据校验");
+                Log.e(TAG, stringBuilder.toString());
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "---------------------------------------------");
+    }
+
+    private void checkService(Context context) {
+        Log.e(TAG, "开始检测service");
+        Log.e(TAG, "=============================================");
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SERVICES);
+            ServiceInfo[] infos = packageInfo.services;
+            if (infos == null || infos.length <= 0)
+                return;
+            StringBuilder stringBuilder = new StringBuilder();
+            for (ServiceInfo activityInfo : infos) {
+                if (!activityInfo.exported)
+                    continue;
+                stringBuilder.setLength(0);
+                stringBuilder.append(activityInfo.name).append("的exported是true,请确认是否要对外开发，不需要的话请设置成false，需要的则确认做了数据校验");
+                Log.e(TAG, stringBuilder.toString());
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "---------------------------------------------");
+    }
+
+    private void checkReceiver(Context context) {
+        Log.e(TAG, "开始检测receiver");
+        Log.e(TAG, "=============================================");
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_RECEIVERS);
+            ActivityInfo[] infos = packageInfo.receivers;
+            if (infos == null || infos.length <= 0)
+                return;
+            StringBuilder stringBuilder = new StringBuilder();
+            for (ActivityInfo activityInfo : infos) {
+                if (!activityInfo.exported)
+                    continue;
+                stringBuilder.setLength(0);
+                stringBuilder.append(activityInfo.name).append("的exported是true,请确认是否要对外开发，不需要的话请设置成false，需要的则确认做了数据校验");
+                Log.e(TAG, stringBuilder.toString());
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "---------------------------------------------");
+    }
+
+    private void checkProvider(Context context) {
+        Log.e(TAG, "开始检测provider");
+        Log.e(TAG, "=============================================");
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_PROVIDERS);
+            ProviderInfo[] infos = packageInfo.providers;
+            if (infos == null || infos.length <= 0)
+                return;
+            StringBuilder stringBuilder = new StringBuilder();
+            for (ProviderInfo activityInfo : infos) {
+                if (!activityInfo.exported)
+                    continue;
+                stringBuilder.setLength(0);
+                stringBuilder.append(activityInfo.name).append("的exported是true,请确认是否要对外开发，不需要的话请设置成false，需要的则确认做了数据校验");
+                Log.e(TAG, stringBuilder.toString());
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "---------------------------------------------");
     }
 
 
